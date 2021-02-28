@@ -13,19 +13,24 @@ def build_url(base_url):
     return parse.urlunsplit((scheme, netloc, path, query, fragment)) 
 
 def get_header_box(soup):
-    header_box = soup.find('div', class_='content')
-    header = header_box.find_all('div', class_='quick-result-entry')    
-    dict_header = []
-    for h in header:
-        try:
-            tempo = h.find('div', class_='quick-result-option').get_text()
-            coniugazione = h.find('li').get_text()
-            dict_header.append({'tempo': tempo, 'coniugazione': coniugazione})
-        except Exception as e:
-            pass
-
-    header_box.extract()
-    return dict_header
+    try:
+        header_box = soup.find('div', class_='content')
+        header = header_box.find_all('div', class_='quick-result-entry')
+        trash = header_box.find('span', class_='flag it')
+        trash.extract()
+        verbo = header_box.find('h2').get_text()
+        dict_header = []
+        for h in header:
+            try:
+                tempo = h.find('div', class_='quick-result-option').get_text()
+                coniugazione = h.find('li').get_text()
+                dict_header.append({'tempo': tempo, 'coniugazione': coniugazione})
+            except Exception as e:
+                pass
+        header_box.extract()
+        return dict_header, verbo
+    except Exception as e:
+        return [], False
 
 def get_table(soup):
     word_wrap_blocks = soup.find_all('div', class_='conj-tense-wrapper')
@@ -49,6 +54,7 @@ def get_table(soup):
         dict_coniugazione.append({'modo': modo_str, 'tempi': dict_tempi})
     return dict_coniugazione
     
+
 def get_result_coniugazione(parola):
     url = build_url(CONIUGAZIONE_URL.format(parola))
     response = requests.get(url, headers={"User-Agent" : "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
@@ -56,6 +62,7 @@ def get_result_coniugazione(parola):
     
     data = response.content
     soup = BeautifulSoup(data, 'lxml')
-    return {'header': get_header_box(soup), 'coniugazioni': get_table(soup)}
+    header_dict, verbo = get_header_box(soup)
+    return {'verbo': verbo, 'header': header_dict, 'coniugazioni': get_table(soup)}
 
         

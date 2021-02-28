@@ -15,9 +15,11 @@ def build_url(base_url):
 def get_header(header):
     try:
         dpos = header.find('span', class_='pos dpos').get_text()
-        dgc = header.find('span', class_='gc dgc').get_text()
-        gram = header.find('span', class_='gram').get_text()
-        part_of_speech = '{} {} - {}'.format(dpos, dgc, gram)
+        gram = header.find_all('span', class_='gram dgram')
+        part_of_speech = dpos
+        for g in gram:
+            part_of_speech += g.get_text()
+    
     except Exception as e:
         print(e)
         dpos = header.find('span', class_='pos dpos').get_text()

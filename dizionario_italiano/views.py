@@ -7,6 +7,7 @@ from .forms import *
 import wikiquote, random
 from dizionario_italiano import webscraping_cambridge, webscraping_coniugazione
 import json
+from django.utils.encoding import smart_str
 
 class HomeDizionarioView(View):
     form_class = SearchForm
@@ -31,6 +32,7 @@ class HomeDizionarioView(View):
 
             response_cambridge = webscraping_cambridge.get_result_cambridge(parola)
             response_coniugazione = webscraping_coniugazione.get_result_coniugazione(parola)
+            print(smart_str(response_coniugazione))
             return render(request, self.template_name, {'form': form, 'parola': parola,
                                                         'response_cambridge': response_cambridge,
                                                         'response_coniugazione': response_coniugazione })
