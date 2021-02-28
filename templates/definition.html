@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+body{
+    background-color: cadetblue; !important
+}
+</style>
+<div class="row">
+    {% if parola %}
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Definitions</h3>                    
+                    {% if response_cambridge %}
+                        {% for page in response_cambridge %}
+                            <p class="h5"><span class="badge badge-info">{{ page.header|upper }}</span></p>
+                            <div class="row">                              
+                                {% for b in page.body %}
+                                    {% for item in b %}
+                                            <div class="col-6 bg-light">
+                                                <p class="text-success"><b>{{ item.indicator|upper }}</b></p>
+                                                {% for key, value in item.definitions.items %}
+                                                    {% if key == 'definition'%}
+                                                        <p><strong>{{ value }}</strong></p>
+                                                    {% else %}
+                                                        <ul class="list-unstyled">
+                                                        {% for esempio in value %}
+                                                            <li><em>{{ esempio.esempio }}</em></li>
+                                                                <ul>
+                                                                    <li class="">{{ esempio.translation }}</li>
+                                                                </ul>
+                                                        {% endfor %}
+                                                        </u>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>Spiacenti, non abbiamo trovato definizioni per “{{ parola }}” nel Dizionario</p>
+                    {% endif %}
+                </div>
+            </div>            
+        </div>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Coniugazione</h3>
+                    {% if response_coniugazione %}
+                        <div class="row">
+                            {% for r in response_coniugazione.header %}
+                                <div class="col-sm-12 col-lg">
+                                <strong>{{ r.tempo }}</strong> {{ r.coniugazione }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="row">                            
+                            {% for r in response_coniugazione.coniugazioni %}
+                                <div class="col-12">
+                                    <hr>
+                                    <div class='text-center'>
+                                        <h4>{{ r.modo }}</h4>
+                                    </div>
+                                    <div class='row'>                                        
+                                        {% for t in r.tempi %}
+                                            <div class="col-sm-6 col-lg-4">
+                                                <div class='conj-tempo text-danger'>
+                                                    <strong>{{ t.tempo|upper }}</strong>                                                    
+                                                </div>
+                                                {% for p in t.personi %}                                        
+                                                    <div class='conj-block'>
+                                                        {{ p.person }}<strong> {{ p.result }}</strong>
+                                                    </div>                                       
+                                                {% endfor %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <p>Il verbo "{{ parola }}" non esiste.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Benvenuti nel Dizionario Italiano </h5>
+                        <p class="card-text">{{ quote }}</p>
+                    </div>
+                </div>
+            </div>
+    {% endif %}
+</div>
+{% endblock content %}

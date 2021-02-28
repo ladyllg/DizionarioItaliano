@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=http://google-webfonts-helper.herokuapp.com/fonts/roboto-mono?subsets=latin
+HostUrl=http://google-webfonts-helper.herokuapp.com/api/fonts/roboto-mono?download=zip&subsets=latin&variants=600,700
